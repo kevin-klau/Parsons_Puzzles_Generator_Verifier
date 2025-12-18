@@ -1,6 +1,6 @@
-Puzzle ID: P2
+Puzzle ID: P1
 Question
 --------
-f(n) = f(n) = 8n^2 + 15n + 9
-g(n) = g(n) = n^2
-Prove f(n) is O(g(n)) by exhibiting explicit constants. Assume n is a natural number with n ≥ 1.
+f(n) = 11 n^2 + 6 n + 15
+g(n) = n^2
+Prove f(n) is O(g(n)) for all n ≥ 1 (use c = 37 and n0 = 1)

@@ -1,85 +1,71 @@
+Return ONLY valid JSON (no markdown, no commentary). Generate exactly ONE Parsons puzzle about Big-O time complexity.
+
+We will verify with Lean using:
+BigO (f g : ℕ → ℝ) : Prop := ∃ c > 0, ∃ n0 : ℕ, ∀ n ≥ n0, f n ≤ c * g n
+
+STRICT "Lean reliability" constraints:
+- Use ONLY a quadratic polynomial example:
+  f(n) = a*n^2 + b*n + d with a,b,d being nonnegative integers (1..20).
+  g(n) = n^2.
+- Set constants.n0 = 1 ALWAYS.
+- Choose constants.c as a specific integer that is clearly ≥ a+b+d (e.g., a+b+d+5).
+- All English blocks must reference the concrete numbers (a,b,d,c,n0). Do NOT write “some constant” or “a constant”.
+- Each block must be atomic: one step only.
+- Provide 8–12 blocks total with 2–3 distractors.
+- Every block MUST include:
+  - "text": plain English math step (NO Lean words like simp/nlinarith/exact_mod_cast)
+  - "lean": Lean tactic snippet valid after `intro n hn`
+- The Lean proof must use these exact names somewhere:
+  - hn'   : (1:ℝ) ≤ (n:ℝ)
+  - hsq   : (n:ℝ) ≤ ((n:ℝ)^2)
+  - h1sq  : (1:ℝ) ≤ ((n:ℝ)^2)
+  - hsum  : (a*n^2 + b*n + d) ≤ (A:ℝ) * (n^2)   (A is a specific integer you choose)
+  - hbound: (A:ℝ) * (n^2) ≤ (c:ℝ) * (n^2)
+- The final proof step MUST be EXACTLY:
+  exact le_trans hsum hbound
+
+Also REQUIRED: include a block that unfolds the goal at the start:
+  Lean snippet: `simp [Parsons.f, Parsons.g]`
+  English text: “Unfold f and g so the goal is an explicit inequality in n.”
+
+Output JSON schema (single object):
 {
-"puzzle_id": "P1",
-"problem": {
-"f_text": "f(n) = 5n^2 + 12n + 40",
-"g_text": "g(n) = n^2",
-"claim_text": "Prove f is O(g) using the BigO definition with explicit constants.",
-"domain_text": "For all n ≥ 1"
-},
-"lean": {
-"f": "fun n => (5:ℝ) * ((n:ℝ)^2) + (12:ℝ) * (n:ℝ) + 40",
-"g": "fun n => ((n:ℝ)^2)"
-},
-"constants": {
-"c": 60,
-"n0": 1
-},
-"blocks": [
-{
-"id": "B1",
-"kind": "step",
-"text": "Convert the assumption n ≥ 1 into a real-number inequality.",
-"lean": "have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn"
-},
-{
-"id": "B2",
-"kind": "step",
-"text": "From n ≥ 1, conclude n is at most n squared.",
-"lean": "have hsq : (n:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']"
-},
-{
-"id": "B3",
-"kind": "step",
-"text": "Bound the linear term by a quadratic term.",
-"lean": "have hlin : (12:ℝ) * (n:ℝ) ≤ (12:ℝ) * ((n:ℝ)^2) := by nlinarith [hsq]"
-},
-{
-"id": "B4",
-"kind": "step",
-"text": "Use n ≥ 1 to bound the constant by a quadratic term.",
-"lean": "have hconst : (40:ℝ) ≤ (40:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']"
-},
-{
-"id": "B5",
-"kind": "step",
-"text": "Combine bounds to get a single quadratic upper bound for f(n).",
-"lean": "have hsum : f n ≤ (57:ℝ) * ((n:ℝ)^2) := by nlinarith [hlin, hconst]"
-},
-{
-"id": "B6",
-"kind": "step",
-"text": "Rename the quadratic coefficient as a constant A.",
-"lean": "set A : ℝ := (57:ℝ)"
-},
-{
-"id": "B7",
-"kind": "step",
-"text": "Rewrite the previous bound using A.",
-"lean": "have hsum : f n ≤ (A:ℝ) * ((n:ℝ)^2) := by simpa [A] using hsum"
-},
-{
-"id": "B8",
-"kind": "step",
-"text": "Show the A-quadratic bound is at most the chosen constant multiple of n squared.",
-"lean": "have h57_60 : (A:ℝ) * ((n:ℝ)^2) ≤ (60:ℝ) * ((n:ℝ)^2) := by nlinarith"
-},
-{
-"id": "B9",
-"kind": "step",
-"text": "Chain the two inequalities to finish the final bound.",
-"lean": "exact le_trans hsum h57_60"
-},
-{
-"id": "D1",
-"kind": "distractor",
-"text": "Try to prove n squared is at most n from n ≥ 1.",
-"lean": "have hbad : ((n:ℝ)^2) ≤ (n:ℝ) := by nlinarith [hn']"
-},
-{
-"id": "D2",
-"kind": "distractor",
-"text": "Attempt to replace n squared with n, making the bound weaker in the wrong direction.",
-"lean": "have hswap : (60:ℝ) * ((n:ℝ)^2) ≤ (60:ℝ) * (n:ℝ) := by nlinarith [hn']"
+  "puzzle_id": "P1",
+  "problem": {
+    "f_text": "a n^2 + b n + d",
+    "g_text": "n^2",
+    "claim_text": "Prove f(n) is O(g(n))",
+    "domain_text": "for all n ≥ 1"
+  },
+  "lean": {
+    "f": "fun n => (a:ℝ) * ((n:ℝ)^2) + (b:ℝ) * (n:ℝ) + d",
+    "g": "fun n => ((n:ℝ)^2)"
+  },
+  "constants": { "c": <int>, "n0": 1 },
+  "blocks": [
+    { "id":"B1", "kind":"step", "text":"...", "lean":"..." },
+    ...
+  ],
+  "correct_order": ["B...","B...","..."]
 }
-]
-}
+
+Notes for Lean snippets (must follow):
+- Convert hn : n ≥ 1 to real inequality using:
+  `have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn`
+- Use nlinarith only on polynomial inequalities.
+- Use nonneg fact for n^2 as:
+  `have hn2nonneg : (0:ℝ) ≤ ((n:ℝ)^2) := by exact sq_nonneg (n:ℝ)`
+- Ensure the final goal is solved only at the very last block (the le_trans line).
+
+English block formatting rule (IMPORTANT):
+- Do NOT repeat the parameter list (a,b,d,c,n0) in every block.
+- Mention the concrete values ONLY ONCE in problem.f_text/problem.g_text/domain_text OR as a single "given" sentence in the first block.
+- Every other block should be short and contextual, e.g.:
+  "From n ≥ 1, rewrite it as 1 ≤ n (in ℝ)."
+  "Using 1 ≤ n, conclude n ≤ n^2."
+  "Bound 9n by 9n^2 using n ≤ n^2."
+- The block text may still include specific numbers when they matter (like 9n ≤ 9n^2, A=28, c=33),
+  but must not repeat the full tuple “a=…, b=…, d=…, c=…, n0=…”.
+
+
+Return ONLY the JSON.

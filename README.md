@@ -14,7 +14,7 @@
 
  ## Key idea
 
- This is a rough proof of concept that could be automated to generate an infinite amount of problems and solutions, but the ollowing steps are manual:
+ This is a rough proof of concept that could be automated to generate an infinite amount of problems and solutions, but the following steps are manual:
 
  1. `cd` to the folder `./Verifier`
 
@@ -25,11 +25,11 @@
 
  4. Run the exporter script (from inside `./Verifier`):
 
-    `powershell |    python parsons_export.py --json puzzle.json |    `
+    `python parsons_export.py --json puzzle.json`
 
     Optional: if you want to force a specific block ordering in the generated Lean proof:
 
-    `powershell |    python parsons_export.py --json puzzle.json --order B1,B2,B3,B4 |    `
+    `python parsons_export.py --json puzzle.json --order B1,B2,B3,B4`
 
  5. After running the script, you should see:
     - `Blocks.txt` → the Parsons puzzle blocks (plain English, ready to shuffle)
