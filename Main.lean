@@ -5,21 +5,20 @@ def BigO (f g : ℕ → ℝ) : Prop :=
 
 namespace Parsons
 
-def f : ℕ → ℝ := fun n => (5:ℝ) * ((n:ℝ)^2) + (12:ℝ) * (n:ℝ) + 40
+def f : ℕ → ℝ := fun n => (8:ℝ) * ((n:ℝ)^2) + (15:ℝ) * (n:ℝ) + 9
 def g : ℕ → ℝ := fun n => ((n:ℝ)^2)
 
 theorem puzzle : BigO f g := by
-  refine ⟨(60 : ℝ), ?_, 1, ?_⟩
+  refine ⟨(40 : ℝ), ?_, 1, ?_⟩
   · nlinarith
   · intro n hn
+    set c : ℝ := (40:ℝ) with hc
+    rw [←hc]
+    simp [g]
     have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn
-    have hsq : (n:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']
-    have hone : (1:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']
-    have h12 : (12:ℝ) * (n:ℝ) ≤ (12:ℝ) * ((n:ℝ)^2) := by nlinarith [hsq]
-    have h40 : (40:ℝ) ≤ (40:ℝ) * ((n:ℝ)^2) := by nlinarith [hone]
-    have hsum : f n ≤ (57:ℝ) * ((n:ℝ)^2) := by dsimp [f]; nlinarith [h12, h40]
-    have h57_60 : (57:ℝ) * ((n:ℝ)^2) ≤ (60:ℝ) * ((n:ℝ)^2) := by nlinarith [hone]
-    have hg : g n = ((n:ℝ)^2) := by rfl
-    exact le_trans hsum h57_60
+    have hsq0 : (0:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']
+    have h15 : (15:ℝ) * (n:ℝ) ≤ (15:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']
+    have h9 : (9:ℝ) ≤ (9:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']
+    have hsum : f n ≤ (32:ℝ) * ((n:ℝ)^2) := by dsimp [f]; nlinarith [h15, h9]
 
 end Parsons
