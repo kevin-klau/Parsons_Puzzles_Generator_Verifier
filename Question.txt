@@ -1,0 +1,6 @@
+Puzzle ID: P1
+Question
+--------
+f(n) = f(n) = 5n^2 + 12n + 40
+g(n) = g(n) = n^2
+Show that f(n) is O(g(n)) by giving explicit constants. Assume n is a natural number with n ≥ 1.
