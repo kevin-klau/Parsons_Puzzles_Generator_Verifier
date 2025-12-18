@@ -27,7 +27,7 @@
 
     `python parsons_export.py --json puzzle.json`
 
-    Optional: if you want to force a specific block ordering in the generated Lean proof:
+    Optional: if you want to force a specific block ordering in the generated Lean proof (Note: Do not add spaces in the order, keep it "B1,B2,B3" etc.):
 
     `python parsons_export.py --json puzzle.json --order B1,B2,B3,B4`
 
