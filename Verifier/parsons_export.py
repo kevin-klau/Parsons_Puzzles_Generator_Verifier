@@ -146,41 +146,70 @@ def render_lean_from_order(
     return "".join(out)
 
 
+
+
+
+def get_default_order(puzzle: Dict[str, Any]) -> List[str]:
+    # 1) Prefer an explicit correct_order if present
+    co = puzzle.get("correct_order")
+    if isinstance(co, list) and all(isinstance(x, (str, int)) for x in co):
+        return [str(x) for x in co]
+
+    # 2) Otherwise use all "step" blocks in file order
+    blocks = puzzle.get("blocks", [])
+    if isinstance(blocks, list):
+        step_ids = [str(b.get("id")) for b in blocks if b.get("kind") == "step" and b.get("id") is not None]
+        if step_ids:
+            return step_ids
+
+        # 3) Fallback: all blocks in file order
+        all_ids = [str(b.get("id")) for b in blocks if b.get("id") is not None]
+        if all_ids:
+            return all_ids
+
+    raise ValueError("No blocks found to form a default order.")
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", required=True, help="Path to single-puzzle JSON")
+
+    # defaults: generate everything with one command
     ap.add_argument("--question-out", default="Question.txt", help="Write question text here")
     ap.add_argument("--blocks-out", default="Blocks.txt", help="Write learner blocks here")
+    ap.add_argument("--lean-out", default="Main.lean", help="Write Lean code here")
+
+
     ap.add_argument("--include-kind", action="store_true", help="Include (step/distractor) in Blocks.txt")
     ap.add_argument("--show-constants", action="store_true", help="Include c and n0 in Question.txt")
 
-    # Lean output is optional (only if you provide an order)
-    ap.add_argument("--order", default="", help="Comma-separated block ids for the chosen solution order")
-    ap.add_argument("--lean-out", default="Main.lean", help="Write Lean code here (if --order is given)")
+    # order is OPTIONAL now
+    ap.add_argument("--order", default="", help="Comma-separated block ids for a chosen solution order")
     ap.add_argument("--theorem-name", default="puzzle", help="Lean theorem name")
 
     args = ap.parse_args()
 
     puzzle = json.loads(Path(args.json).read_text(encoding="utf-8"))
 
-    # 1) Print/write question
+    # 1) Question
     qtxt = render_question_text(puzzle, show_constants=args.show_constants)
     Path(args.question_out).write_text(qtxt, encoding="utf-8")
 
-    # 2) Print/write learner blocks (English only)
+    # 2) Blocks (English)
     btxt = render_blocks_for_learners(puzzle, include_kind=args.include_kind)
     Path(args.blocks_out).write_text(btxt, encoding="utf-8")
 
-    print(f"Wrote {args.question_out}")
-    print(f"Wrote {args.blocks_out}")
-
-    # 3) Optional Lean output if order provided
+    # 3) Lean (default order unless specified)
     if args.order.strip():
         order = [s.strip() for s in args.order.split(",") if s.strip()]
-        lean_src = render_lean_from_order(puzzle, order, theorem_name=args.theorem_name)
-        Path(args.lean_out).write_text(lean_src, encoding="utf-8")
-        print(f"Wrote {args.lean_out}")
+    else:
+        order = get_default_order(puzzle)
 
+    lean_src = render_lean_from_order(puzzle, order, theorem_name=args.theorem_name)
+    Path(args.lean_out).write_text(lean_src, encoding="utf-8")
+
+    print(f"Wrote {args.question_out}")
+    print(f"Wrote {args.blocks_out}")
+    print(f"Wrote {args.lean_out}")
 
 if __name__ == "__main__":
     main()

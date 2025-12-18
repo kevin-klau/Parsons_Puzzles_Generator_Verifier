@@ -20,5 +20,7 @@ theorem puzzle : BigO f g := by
     have h15 : (15:ℝ) * (n:ℝ) ≤ (15:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']
     have h9 : (9:ℝ) ≤ (9:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']
     have hsum : f n ≤ (32:ℝ) * ((n:ℝ)^2) := by dsimp [f]; nlinarith [h15, h9]
+    have h57_60 : (32:ℝ) * ((n:ℝ)^2) ≤ c * ((n:ℝ)^2) := by nlinarith [hc, hsq0]
+    exact le_trans hsum h57_60
 
 end Parsons

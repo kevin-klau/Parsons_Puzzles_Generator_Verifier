@@ -1,0 +1,85 @@
+{
+"puzzle_id": "P1",
+"problem": {
+"f_text": "f(n) = 5n^2 + 12n + 40",
+"g_text": "g(n) = n^2",
+"claim_text": "Prove f is O(g) using the BigO definition with explicit constants.",
+"domain_text": "For all n ≥ 1"
+},
+"lean": {
+"f": "fun n => (5:ℝ) * ((n:ℝ)^2) + (12:ℝ) * (n:ℝ) + 40",
+"g": "fun n => ((n:ℝ)^2)"
+},
+"constants": {
+"c": 60,
+"n0": 1
+},
+"blocks": [
+{
+"id": "B1",
+"kind": "step",
+"text": "Convert the assumption n ≥ 1 into a real-number inequality.",
+"lean": "have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn"
+},
+{
+"id": "B2",
+"kind": "step",
+"text": "From n ≥ 1, conclude n is at most n squared.",
+"lean": "have hsq : (n:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']"
+},
+{
+"id": "B3",
+"kind": "step",
+"text": "Bound the linear term by a quadratic term.",
+"lean": "have hlin : (12:ℝ) * (n:ℝ) ≤ (12:ℝ) * ((n:ℝ)^2) := by nlinarith [hsq]"
+},
+{
+"id": "B4",
+"kind": "step",
+"text": "Use n ≥ 1 to bound the constant by a quadratic term.",
+"lean": "have hconst : (40:ℝ) ≤ (40:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']"
+},
+{
+"id": "B5",
+"kind": "step",
+"text": "Combine bounds to get a single quadratic upper bound for f(n).",
+"lean": "have hsum : f n ≤ (57:ℝ) * ((n:ℝ)^2) := by nlinarith [hlin, hconst]"
+},
+{
+"id": "B6",
+"kind": "step",
+"text": "Rename the quadratic coefficient as a constant A.",
+"lean": "set A : ℝ := (57:ℝ)"
+},
+{
+"id": "B7",
+"kind": "step",
+"text": "Rewrite the previous bound using A.",
+"lean": "have hsum : f n ≤ (A:ℝ) * ((n:ℝ)^2) := by simpa [A] using hsum"
+},
+{
+"id": "B8",
+"kind": "step",
+"text": "Show the A-quadratic bound is at most the chosen constant multiple of n squared.",
+"lean": "have h57_60 : (A:ℝ) * ((n:ℝ)^2) ≤ (60:ℝ) * ((n:ℝ)^2) := by nlinarith"
+},
+{
+"id": "B9",
+"kind": "step",
+"text": "Chain the two inequalities to finish the final bound.",
+"lean": "exact le_trans hsum h57_60"
+},
+{
+"id": "D1",
+"kind": "distractor",
+"text": "Try to prove n squared is at most n from n ≥ 1.",
+"lean": "have hbad : ((n:ℝ)^2) ≤ (n:ℝ) := by nlinarith [hn']"
+},
+{
+"id": "D2",
+"kind": "distractor",
+"text": "Attempt to replace n squared with n, making the bound weaker in the wrong direction.",
+"lean": "have hswap : (60:ℝ) * ((n:ℝ)^2) ≤ (60:ℝ) * (n:ℝ) := by nlinarith [hn']"
+}
+]
+}

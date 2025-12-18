@@ -13,7 +13,7 @@ theorem puzzle : BigO f g := by
   · nlinarith
   · intro n hn
     set c : ℝ := (40:ℝ) with hc
-    rw [←hc]
+    rw [hc]
     simp [g]
     have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn
     have hsq0 : (0:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']
