@@ -1,0 +1,91 @@
+{
+"puzzle_id": "P2",
+"problem": {
+"f_text": "f(n) = 8n^2 + 15n + 9",
+"g_text": "g(n) = n^2",
+"claim_text": "Prove f(n) is O(g(n)) by exhibiting explicit constants.",
+"domain_text": "Assume n is a natural number with n ≥ 1."
+},
+"lean": {
+"f": "fun n => (8:ℝ) * ((n:ℝ)^2) + (15:ℝ) * (n:ℝ) + 9",
+"g": "fun n => ((n:ℝ)^2)"
+},
+"constants": {
+"c": 40,
+"n0": 1
+},
+"blocks": [
+{
+"id": "B1",
+"kind": "step",
+"text": "Introduce a helper constant equal to the chosen multiplier.",
+"lean": "set c : ℝ := (40:ℝ) with hc"
+},
+{
+"id": "B2",
+"kind": "step",
+"text": "Replace the numeric multiplier in the goal with the helper constant.",
+"lean": "rw [←hc]"
+},
+{
+"id": "B3",
+"kind": "step",
+"text": "Rewrite the comparison to use the explicit formula for the reference function.",
+"lean": "simp [g]"
+},
+{
+"id": "B4",
+"kind": "step",
+"text": "Convert the lower bound on n into a real-number inequality.",
+"lean": "have hn' : (1:ℝ) ≤ (n:ℝ) := by exact_mod_cast hn"
+},
+{
+"id": "B5",
+"kind": "step",
+"text": "Record that the squared term is nonnegative under the domain assumption.",
+"lean": "have hsq0 : (0:ℝ) ≤ ((n:ℝ)^2) := by nlinarith [hn']"
+},
+{
+"id": "B6",
+"kind": "step",
+"text": "Bound the linear term by a quadratic term using n ≥ 1.",
+"lean": "have h15 : (15:ℝ) * (n:ℝ) ≤ (15:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']"
+},
+{
+"id": "B7",
+"kind": "step",
+"text": "Bound the constant term by a quadratic term using n ≥ 1.",
+"lean": "have h9 : (9:ℝ) ≤ (9:ℝ) * ((n:ℝ)^2) := by nlinarith [hn']"
+},
+{
+"id": "B8",
+"kind": "step",
+"text": "Combine the bounds to show f(n) is at most a fixed multiple of n^2.",
+"lean": "have hsum : f n ≤ (32:ℝ) * ((n:ℝ)^2) := by dsimp [f]; nlinarith [h15, h9]"
+},
+{
+"id": "B9",
+"kind": "step",
+"text": "Show that the intermediate multiple is at most the chosen multiplier.",
+"lean": "have h57_60 : (32:ℝ) * ((n:ℝ)^2) ≤ c * ((n:ℝ)^2) := by nlinarith [hc, hsq0]"
+},
+{
+"id": "B10",
+"kind": "step",
+"text": "Chain the two inequalities to finish the required upper bound.",
+"lean": "exact le_trans hsum h57_60"
+},
+{
+"id": "D1",
+"kind": "distractor",
+"text": "Rewrite using the helper equality in the opposite direction.",
+"lean": "rw [hc]"
+},
+{
+"id": "D2",
+"kind": "distractor",
+"text": "Try to strengthen the domain to a larger lower bound.",
+"lean": "have hn2 : (2:ℝ) ≤ (n:ℝ) := by nlinarith [hn']"
+}
+]
+}

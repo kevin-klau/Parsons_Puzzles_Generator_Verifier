@@ -1,0 +1,16 @@
+Blocks (cut into cards and shuffle)
+---------------------------------
+(Note: some blocks may be distractors.)
+
+[B1] Introduce a helper constant equal to the chosen multiplier.
+[B2] Replace the numeric multiplier in the goal with the helper constant.
+[B3] Rewrite the comparison to use the explicit formula for the reference function.
+[B4] Convert the lower bound on n into a real-number inequality.
+[B5] Record that the squared term is nonnegative under the domain assumption.
+[B6] Bound the linear term by a quadratic term using n ≥ 1.
+[B7] Bound the constant term by a quadratic term using n ≥ 1.
+[B8] Combine the bounds to show f(n) is at most a fixed multiple of n^2.
+[B9] Show that the intermediate multiple is at most the chosen multiplier.
+[B10] Chain the two inequalities to finish the required upper bound.
+[D1] Rewrite using the helper equality in the opposite direction.
+[D2] Try to strengthen the domain to a larger lower bound.
